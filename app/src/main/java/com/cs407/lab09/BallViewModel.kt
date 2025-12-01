@@ -63,9 +63,15 @@ class BallViewModel : ViewModel() {
                 val sensorX = event.values[0]
                 val sensorY = event.values[1]
 
-                // The sensor's x and y axes are inverted relative to the desired directions
-                val xAcc = -sensorX
-                val yAcc = sensorY
+                val multiplier = 8f
+
+                // Coordinate system conversion:
+                // Gravity sensor returns values opposite to physical gravity
+                // - Sensor X positive = device's left side tilted up = ball should roll right (screen +X)
+                // - Sensor Y positive = device's bottom tilted up = ball should roll up (screen -Y)
+                // Screen Y-axis points downward, sensor Y-axis points upward
+                val xAcc = sensorX * multiplier
+                val yAcc = -sensorY * multiplier
 
                 currentBall.updatePositionAndVelocity(
                     xAcc = xAcc,
